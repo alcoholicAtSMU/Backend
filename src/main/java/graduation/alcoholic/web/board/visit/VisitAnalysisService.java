@@ -108,8 +108,8 @@ public class VisitAnalysisService {
     }
 
     public VisitResponseDto getVisitInfo (Long a_id) {
-        Optional<Visit> visitEntity = visitRepository.findById(a_id);
-        VisitResponseDto visitResponseDto = new VisitResponseDto(visitEntity.orElseThrow());
+        Visit visitEntity = visitRepository.findById(a_id).orElseThrow(() -> new NoSuchElementException("a_id =" + a_id));
+        VisitResponseDto visitResponseDto = new VisitResponseDto(visitEntity);
 
         return visitResponseDto;
     }

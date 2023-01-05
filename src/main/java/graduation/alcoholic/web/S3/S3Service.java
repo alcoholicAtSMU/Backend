@@ -35,6 +35,7 @@ public class S3Service {
     public String bucket;
 
     public List<String> uploadImage(List<MultipartFile> multipartFileList) {
+
         List<String> fileNameList = new ArrayList<>();
 
         multipartFileList.forEach(file -> {

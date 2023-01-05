@@ -56,12 +56,10 @@ public class RecommendationService {
         }
 
 
-
         List<RecommendScore> recommendScoreList = getScore(requestDto, alcoholTasteList);
 
         List<Integer> noneList = getTasteCheckList(requestDto, Taste.없음);
         List<Integer> strongList = getTasteCheckList(requestDto, Taste.강함);
-
 
         recommendScoreList.removeIf(recommendScore -> (recommendScore.getScore1() > 2) || (recommendScore.getScore2() > 2) || (recommendScore.getScore3() > 2) || (recommendScore.getScore4() > 2) || (recommendScore.getScore5() > 2));
 

@@ -9,15 +9,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class RecommendationiController {
+public class RecommendationController {
 
     private final RecommendationService recommendationService;
 
     @PostMapping("/recommendation")
     public List<AlcoholDetailResponseDto> getRecommendation(@RequestBody RecommendRequestDto requestDto) {
 
-        System.out.println("test");
-        System.out.println(requestDto.getTaste1());
         return recommendationService.getRecommendation(requestDto);
     }
 }

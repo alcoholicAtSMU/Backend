@@ -19,15 +19,12 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewService reviewService;
-
     private final AuthService authService;
 
     @PostMapping(value = "/review")
     public Long save(HttpServletRequest httpRequest,
                      @RequestPart(value = "requestDto") ReviewSaveRequestDto requestDto, @RequestPart(value = "fileList", required = false) List<MultipartFile> fileList) {
 
-        if (fileList == null)
-            System.out.println("fileList controller에서도 null");
         String jwtToken = JwtHeaderUtil.getAccessToken(httpRequest);
         return reviewService.save(authService.getMemberId(jwtToken), requestDto, fileList);
 
@@ -43,15 +40,16 @@ public class ReviewController {
 
     @GetMapping("/review/alcohol/{alcohol_id}")
     public ReviewTotalResponseDto findByAlcohol(@PathVariable Long alcohol_id) {
+
         return reviewService.findByAlcohol(alcohol_id);
     }
 
 
     @GetMapping("/review/user")
     public List<ReviewResponseDto> findByUser(HttpServletRequest httpRequest){
+
             String jwtToken = JwtHeaderUtil.getAccessToken(httpRequest);
             return reviewService.findByUser(authService.getMemberId(jwtToken));
-
     }
 
 

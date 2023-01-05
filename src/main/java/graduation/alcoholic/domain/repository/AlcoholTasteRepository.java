@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface AlcoholTasteRepository extends JpaRepository<AlcoholTaste, Long> {
 
-    //@Query("SELECT a FROM AlcoholTaste a WHERE a.type = :type")
     List<AlcoholTaste> findByType(@Param("type") Type type);
 
     @Query("SELECT a FROM AlcoholTaste a WHERE a.type = '증류주' AND a.degree <= 25")
