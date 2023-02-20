@@ -33,15 +33,6 @@ public class CollectionContentService {
         collectionContentRepository.saveAll(collectionContentSaveRequestDto.toEntity());
     }
 
-    @Transactional(readOnly = true)
-    public List<CollectionContentResponseDto> findByCollectionInfo(Long collection_id) {
-
-        CollectionInfo collectionInfo = collectionInfoRepository.findById(collection_id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 컬렉션이 없습니다. id: " + collection_id));
-
-        return collectionContentRepository.findByCollectionInfo(collectionInfo);
-    }
-
     @Transactional
     public void delete(Long collectioninfo_id, Long alcohol_id) {
 
@@ -51,8 +42,19 @@ public class CollectionContentService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 술이 없습니다. alcohol_id=" + alcohol_id));
 
         CollectionContent collectionContent = collectionContentRepository.findByCollectionInfoAndAlcohol(collectionInfo, alcohol)
-                        .orElseThrow(() -> new IllegalArgumentException("해당 컬렉션 컨텐츠가 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 컬렉션 컨텐츠가 없습니다."));
 
         collectionContentRepository.delete(collectionContent);
     }
+
+    @Transactional(readOnly = true)
+    public List<CollectionContentResponseDto> findByCollectionInfo(Long collection_id) {
+
+        CollectionInfo collectionInfo = collectionInfoRepository.findById(collection_id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 컬렉션이 없습니다. id: " + collection_id));
+
+        return collectionContentRepository.findByCollectionInfo(collectionInfo);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package graduation.alcoholic.domain.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class BarImage {
 
@@ -26,9 +27,9 @@ public class BarImage {
     private BarImageId id;
 
     @Builder
-    public BarImage(Bar bar, Image image, BarImageId id) {
+    public BarImage(Bar bar, Image image) {
         this.bar = bar;
         this.image = image;
-        this.id = id;
+        this.id = new BarImageId();
     }
 }

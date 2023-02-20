@@ -8,19 +8,18 @@ import graduation.alcoholic.domain.entity.User;
 import graduation.alcoholic.domain.enums.Taste;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class ReviewSaveRequestDto {
-
 
     private User user;
 
     private Alcohol alcohol;
 
     private String content;
-    private String image;
 
     private Integer star;
 
@@ -31,12 +30,11 @@ public class ReviewSaveRequestDto {
     private Taste taste5;
 
     @Builder
-    public ReviewSaveRequestDto(User user, Alcohol alcohol, String content, String image, Integer star,
+    public ReviewSaveRequestDto(User user, Alcohol alcohol, String content, Integer star,
                                 Taste taste1, Taste taste2, Taste taste3, Taste taste4, Taste taste5) {
         this.user = user;
         this.alcohol = alcohol;
         this.content = content;
-        this.image = image;
         this.star = star;
         this.taste1 = taste1;
         this.taste2 = taste2;
@@ -50,7 +48,6 @@ public class ReviewSaveRequestDto {
                 .user(user)
                 .alcohol(alcohol)
                 .content(content)
-                .image(image)
                 .star(star)
                 .taste1(taste1)
                 .taste2(taste2)
@@ -60,4 +57,7 @@ public class ReviewSaveRequestDto {
                 .build();
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

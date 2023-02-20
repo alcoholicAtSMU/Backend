@@ -5,10 +5,11 @@ import graduation.alcoholic.domain.entity.CollectionContent;
 import graduation.alcoholic.domain.entity.CollectionContentId;
 import graduation.alcoholic.domain.entity.CollectionInfo;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.List;
 
-@Data
+@Getter
 public class CollectionContentResponseDto {
 
     private Long id;

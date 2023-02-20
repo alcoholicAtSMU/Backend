@@ -1,5 +1,6 @@
 package graduation.alcoholic.domain.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ReviewImage {
 
@@ -25,4 +26,10 @@ public class ReviewImage {
     @EmbeddedId
     private ReviewImageId id;
 
+    @Builder
+    public ReviewImage(Review review, Image image) {
+        this.review = review;
+        this.image = image;
+        this.id = new ReviewImageId();
+    }
 }

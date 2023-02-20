@@ -3,12 +3,13 @@ package graduation.alcoholic.web.review.dto;
 import graduation.alcoholic.domain.enums.Taste;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
-@Data
+@Getter
 @NoArgsConstructor
 public class ReviewUpdateRequestDto {
 

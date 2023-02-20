@@ -1,6 +1,7 @@
 package graduation.alcoholic.domain.entity;
 
 import graduation.alcoholic.domain.enums.Taste;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Review extends BaseTimeEntity{
 
@@ -23,8 +24,6 @@ public class Review extends BaseTimeEntity{
     private Alcohol alcohol;
 
     private String content;
-
-    private String image;
 
     private Integer star;
 
@@ -46,13 +45,12 @@ public class Review extends BaseTimeEntity{
 
 
     @Builder
-    public Review(User user, Alcohol alcohol, String content, String image,
+    public Review(User user, Alcohol alcohol, String content,
                   Integer star, Taste taste1, Taste taste2, Taste taste3, Taste taste4, Taste taste5) {
 
         this.user = user;
         this.alcohol = alcohol;
         this.content = content;
-        this.image = image;
         this.star = star;
         this.taste1 = taste1;
         this.taste2 = taste2;
@@ -62,9 +60,8 @@ public class Review extends BaseTimeEntity{
 
     }
 
-    public void update (String content, String image, Integer star, Taste taste1, Taste taste2, Taste taste3, Taste taste4, Taste taste5) {
+    public void update (String content, Integer star, Taste taste1, Taste taste2, Taste taste3, Taste taste4, Taste taste5) {
         this.content = content;
-        this.image = image;
         this.star = star;
         this.taste1 = taste1;
         this.taste2 = taste2;

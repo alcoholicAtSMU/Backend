@@ -1,19 +1,16 @@
 package graduation.alcoholic.web.review;
 
+import graduation.alcoholic.domain.entity.Image;
+import graduation.alcoholic.domain.repository.*;
 import graduation.alcoholic.web.S3.S3Service;
-import graduation.alcoholic.domain.repository.AlcoholRepository;
 import graduation.alcoholic.domain.entity.Alcohol;
 import graduation.alcoholic.domain.entity.Review;
 import graduation.alcoholic.domain.entity.User;
 import graduation.alcoholic.domain.enums.Taste;
-import graduation.alcoholic.domain.repository.ReviewRepository;
-import graduation.alcoholic.domain.repository.UserRepository;
-import graduation.alcoholic.web.review.dto.ReviewResponseDto;
-import graduation.alcoholic.web.review.dto.ReviewSaveRequestDto;
-import graduation.alcoholic.web.review.dto.ReviewTotalResponseDto;
-import graduation.alcoholic.web.review.dto.ReviewUpdateRequestDto;
+import graduation.alcoholic.web.image.ImageService;
+import graduation.alcoholic.web.image.ReviewImageService;
+import graduation.alcoholic.web.review.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -31,11 +28,11 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final AlcoholRepository alcoholRepository;
-    private final S3Service s3Service;
+    private final ReviewImageRepository reviewImageRepository;
 
 
     @Transactional
-    public Long save(Long id, ReviewSaveRequestDto requestDto, List<MultipartFile> fileList) {
+    public Long save(Long id, ReviewSaveRequestDto requestDto, List<Image> imageList) {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
@@ -43,40 +40,39 @@ public class ReviewService {
 
         checkReviewDuplication(requestDto);
 
-        requestDto.setImage(saveFileList(fileList));
+        Review review = reviewRepository.save(requestDto.toEntity());
 
+        ReviewImageSaveRequestDto reviewImageSaveRequestDto = new ReviewImageSaveRequestDto(review, imageList);
+        reviewImageRepository.saveAll(reviewImageSaveRequestDto.toEntity());
 
-        return reviewRepository.save(requestDto.toEntity()).getId();
+        return review.getId();
     }
 
 
     @Transactional
-    public Long update(Long id, ReviewUpdateRequestDto requestDto, List<MultipartFile> fileList) {
+    public Long update(Long id, ReviewUpdateRequestDto requestDto, List<Image> imageList) {
 
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다. id" + id));
 
-        List<String> imageList = StringTofileNameList(review.getImage());
-        if (requestDto.getImageList() != null) {
-            List<String> deleteImageList = requestDto.getImageList();
-
-            for (int i=0; i<deleteImageList.size(); i++) {
-                s3Service.deleteImage(deleteImageList.get(i));
-                imageList.remove(deleteImageList.get(i));
-            }
-        }
-
-        if (!CollectionUtils.isEmpty(fileList)) {
-            List<String> saveImageList = s3Service.uploadImage(fileList);
-            for (int i=0; i < saveImageList.size(); i++) {
-                imageList.add(saveImageList.get(i));
-            }
-        }
-
-        review.update(requestDto.getContent(), fileNameListToString(imageList), requestDto.getStar(),
+        review.update(requestDto.getContent(), requestDto.getStar(),
                 requestDto.getTaste1(), requestDto.getTaste2(), requestDto.getTaste3(), requestDto.getTaste4(), requestDto.getTaste5());
 
+        ReviewImageSaveRequestDto reviewImageSaveRequestDto = new ReviewImageSaveRequestDto(review, imageList);
+        reviewImageRepository.saveAll(reviewImageSaveRequestDto.toEntity());
+
         return id;
+    }
+
+
+    @Transactional
+    public List<String> delete(Long id) {
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다. id" +id));
+
+        reviewRepository.delete(review);
+        return reviewImageRepository.findByReview(review).stream().map(image -> image.getImage()).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -106,15 +102,7 @@ public class ReviewService {
     }
 
 
-    @Transactional
-    public void delete(Long id) {
 
-        Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 리뷰가 없습니다. id" +id));
-
-        deleteFileList(review);
-        reviewRepository.delete(review);
-    }
 
 
     @Transactional(readOnly = true)
@@ -125,16 +113,6 @@ public class ReviewService {
         if (review.isPresent()) {
             throw new IllegalStateException("중복된 리뷰입니다.");
         }
-    }
-
-    public String fileNameListToString(List<String> fileNameList) {
-
-        return StringUtils.join(fileNameList, ",");
-    }
-
-    public List<String> StringTofileNameList(String fileNameString) {
-
-        return new ArrayList<String>(Arrays.asList(fileNameString.split(",")));
     }
 
 
@@ -323,29 +301,6 @@ public class ReviewService {
                 .top_taste5_percent(percent[4])
                 .build();
 
-    }
-
-    public String saveFileList(List<MultipartFile> fileList) {
-
-        if (!CollectionUtils.isEmpty(fileList)) {
-            List<String> fileNameList = s3Service.uploadImage(fileList);
-            String fileNameString  = fileNameListToString(fileNameList);
-            return fileNameString;
-        }
-        else {
-            System.out.println("입력된 사진 없음");
-            return ",";
-        }
-    }
-
-    public void deleteFileList(Review review) {
-
-        if (review.getImage() != ",") {
-            List<String> fileNameList = StringTofileNameList(review.getImage());
-            for (int i=0; i<fileNameList.size(); i++) {
-                s3Service.deleteImage(fileNameList.get(i));
-            }
-        }
     }
 
 }

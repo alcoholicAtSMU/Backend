@@ -4,6 +4,7 @@ import graduation.alcoholic.web.board.alcohol.dto.AlcoholDetailResponseDto;
 import graduation.alcoholic.web.board.alcohol.dto.AlcoholResponseDto;
 import graduation.alcoholic.domain.enums.Taste;
 import graduation.alcoholic.domain.enums.Type;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Alcohol {
 

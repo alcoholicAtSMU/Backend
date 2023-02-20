@@ -1,5 +1,6 @@
 package graduation.alcoholic.domain.entity;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ZzimId implements Serializable {
 
     private Long user_id;

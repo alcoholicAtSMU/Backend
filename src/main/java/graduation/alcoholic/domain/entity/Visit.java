@@ -1,6 +1,7 @@
 package graduation.alcoholic.domain.entity;
 
 import graduation.alcoholic.domain.entity.Alcohol;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Visit {
 
     @Id

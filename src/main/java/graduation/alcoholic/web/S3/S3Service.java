@@ -58,9 +58,12 @@ public class S3Service {
         return fileNameList;
     }
 
-    public void deleteImage(String fileName) {
+    public void deleteImage(List<String> fileNameList) {
 
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName.substring(57)));
+        fileNameList.forEach(fileName -> {
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName.substring(57)));
+        });
+
     }
 
     private String createFileName(String fileName) {

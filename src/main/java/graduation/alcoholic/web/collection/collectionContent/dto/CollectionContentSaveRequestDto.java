@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class CollectionContentSaveRequestDto {
 
@@ -23,6 +23,9 @@ public class CollectionContentSaveRequestDto {
         this.alcoholList = alcoholList;
     }
 
+    public void setCollection(CollectionInfo collection) {
+        this.collection = collection;
+    }
 
     public List<CollectionContent> toEntity() {
 

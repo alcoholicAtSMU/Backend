@@ -5,13 +5,14 @@ import graduation.alcoholic.domain.entity.Review;
 import graduation.alcoholic.domain.enums.Taste;
 import graduation.alcoholic.domain.enums.Type;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Data
+@Getter
 public class ReviewResponseDto {
 
     private Long id;
@@ -43,7 +44,6 @@ public class ReviewResponseDto {
         this.type = entity.getAlcohol().getType();
         this.nickname = entity.getUser().getNickname();
         this.content = entity.getContent();
-        this.image = StringTofileNameList(entity.getImage());
         this.star = entity.getStar();
         this.taste1 = entity.getTaste1();
         this.taste2 = entity.getTaste2();
@@ -53,16 +53,8 @@ public class ReviewResponseDto {
         this.modified_date = DateTimeFormatter.ofPattern("yyyy-MM-dd").format(entity.getModifiedDate());
     }
 
-    public List<String> StringTofileNameList(String fileNameString) {
-
-        if (fileNameString == ",") {
-            return new ArrayList<String>();
-        }
-        else {
-            List<String> nameList = Arrays.asList(fileNameString.split(","));
-            return nameList;
-        }
+    public void setImage(List<String> fileNameList) {
+        this.image = fileNameList;
     }
-
 
 }

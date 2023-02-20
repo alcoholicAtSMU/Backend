@@ -1,16 +1,16 @@
 package graduation.alcoholic.domain.entity;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Image {
 
@@ -20,9 +20,15 @@ public class Image {
 
     private String image;
 
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+    private List<ReviewImage> reviewImageList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+    private List<BarImage> barImageList = new ArrayList<>();
+
+
     @Builder
-    public Image(Long id, String image) {
-        this.id = id;
+    public Image(String image) {
         this.image = image;
     }
 }
